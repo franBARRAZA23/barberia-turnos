@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbería - Turnos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-900 text-white font-sans">
+    <div class="max-w-md mx-auto mt-20 p-6 bg-zinc-800 rounded-xl shadow-2xl border border-zinc-700">
+        <h1 class="text-3xl font-bold text-center mb-2">MI BARBERÍA 💈</h1>
+        <p class="text-zinc-400 text-center mb-8">Agendá tu corte en un minuto</p>
+        
+        <form action="/reservar" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Nombre Completo</label>
+                <input type="text" name="cliente" required class="w-full p-2 rounded bg-zinc-700 border border-zinc-600 focus:ring-2 focus:ring-yellow-500 outline-none">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-1">Día</label>
+                <input type="date" id="fecha" name="dia" required class="w-full p-2 rounded bg-zinc-700 border border-zinc-600 outline-none">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Hora disponible</label>
+                <select id="hora" name="hora" required class="w-full p-2 rounded bg-zinc-700 border border-zinc-600 outline-none">
+                    <option value="">Seleccioná un día primero</option>
+                </select>
+            </div>
+
+            <button type="submit" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-3 rounded-lg transition">
+                Confirmar Turno
+            </button>
+        </form>
+    </div>
+
+    <script>
+        const fechaInput = document.getElementById('fecha');
+        const horaSelect = document.getElementById('hora');
+
+        const horariosSemana = ["17:30", "18:20", "19:15", "20:10"];
+        const horariosSabado = ["16:00", "16:50", "17:40", "18:30", "19:20"];
+
+        fechaInput.addEventListener('change', (e) => {
+            const fechaSeleccionada = new Date(e.target.value + 'T00:00:00');
+            const diaSemana = fechaSeleccionada.getDay(); // 0=Dom, 1=Lun, 2=Mar, 3=Mie, 4=Jue, 5=Vie, 6=Sab
+            
+            horaSelect.innerHTML = '<option value="">Cargando horarios...</option>';
+
+            let opciones = "";
+            
+            if (diaSemana === 4 || diaSemana === 5) { // Jueves o Viernes
+                horariosSemana.forEach(h => opciones += `<option value="${h}">${h}</option>`);
+            } else if (diaSemana === 6) { // Sábado
+                horariosSabado.forEach(h => opciones += `<option value="${h}">${h}</option>`);
+            } else {
+                opciones = '<option value="">No abrimos este día</option>';
+            }
+
+            horaSelect.innerHTML = opciones;
+        });
+    </script>
+</body>
+</html>
